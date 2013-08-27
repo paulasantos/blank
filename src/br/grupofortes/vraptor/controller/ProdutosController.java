@@ -1,5 +1,6 @@
 package br.grupofortes.vraptor.controller;
 
+import static br.com.caelum.vraptor.view.Results.json;
 import br.com.caelum.vraptor.Delete;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Path;
@@ -52,7 +53,7 @@ public class ProdutosController {
 	public void update(Produto produto) {
 		validator.validate(produto);
 		validator.onErrorUsePageOf(this).edit(produto.getId());
-		
+
 		if (produtoDao.update(produto))
 			result.include("mensagem", "Produto atualizado com sucesso!");
 		else
@@ -65,5 +66,16 @@ public class ProdutosController {
 	public void remove(Long id) {
 		produtoDao.delete(produtoDao.carrega(id));
 		result.redirectTo(this).produtos();
+	}
+
+	@Get("find.json")
+	public void findJson(String q) {
+		result.use(json()).withoutRoot().from(produtoDao.busca(q)).exclude("id", "descrição").serialize();
+	}
+
+	@Get("/find/{nome}")
+	public void find(String nome) {
+		result.include("nome", nome)
+				.include("produtos", produtoDao.busca(nome));
 	}
 }

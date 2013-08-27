@@ -87,3 +87,8 @@ ul {
 table tr th{
 	color: #333;
 }
+
+.inp_busca{
+	margin-top: 8px;
+	color: #777;
+}
